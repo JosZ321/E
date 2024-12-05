@@ -1,113 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html> 
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exam Portal</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f4f4f4;
-    }
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-    #answer-box {
-      position: fixed;
-      bottom: 5px;
-      left: 5px;
-      width: 300px;
-      max-height: 200px;
-      background-color: rgba(0, 0, 0, 0.8);
-      color: white;
-      font-size: 12px;
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-      overflow-y: auto;
-      z-index: 1000;
-    }
-    #answer-box button {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      background-color: red;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-      width: 20px;
-      height: 20px;
-      font-size: 12px;
-      text-align: center;
-      line-height: 16px;
-    }
-  </style>
+    <title>Exam Portal</title>
+    <style>
+        /* Style for the body to make the site fully cover the page */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Full-page iframe for the main content */
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Style for the popup button as a small dot */
+        .popup-button {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            width: 20px;
+            height: 20px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Hover effect for the button */
+        .popup-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Container for the popup iframe */
+        #popup-container {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 800px;
+            height: 600px;
+            background-color: white;
+            border: 2px solid #007bff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            display: none; /* Initially hidden */
+        }
+
+        #popup-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+    <script>
+        /* Function to show the popup iframe */
+        function togglePopup() {
+            var popup = document.getElementById('popup-container');
+            popup.style.display = (popup.style.display === 'none' || popup.style.display === '') ? 'block' : 'none';
+        }
+    </script>
 </head>
 <body>
-  <iframe src="https://bbjh.magnoliaisd.org/"></iframe>
+    <!-- Main content displayed in a full-page iframe -->
+    <iframe src="https://acronyms.thefreedictionary.com/HJ"></iframe>
 
-  <script type="module">
-    import { GoogleGenerativeAI } from "https://unpkg.com/@google/generative-ai@latest/dist/generative-ai.module.js";
+    <!-- Popup button as a small dot -->
+    <button class="popup-button" onclick="togglePopup()"></button>
 
-    // Set your API key here securely (do NOT expose it in production)
-    const API_KEY = "AIzaSyDsKllf7ghVdJcgIBcrGG8alQ5rX3QZR94";
-    const genAI = new GoogleGenerativeAI(API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-    async function fetchAnswer(question) {
-      try {
-        const result = await model.generateContent(question);
-        const response = result.response?.text?.() || "No response available.";
-        displayAnswer(response);
-      } catch (error) {
-        displayAnswer("Error fetching the response. Please try again.");
-        console.error("Error fetching the answer:", error);
-      }
-    }
-
-    function displayAnswer(answer) {
-      // Remove existing answer box if present
-      let existingBox = document.getElementById("answer-box");
-      if (existingBox) {
-        existingBox.remove();
-      }
-
-      // Create the answer box
-      const answerBox = document.createElement("div");
-      answerBox.id = "answer-box";
-
-      // Add the answer content
-      const answerText = document.createElement("p");
-      answerText.innerText = answer;
-      answerBox.appendChild(answerText);
-
-      // Add a close button
-      const closeButton = document.createElement("button");
-      closeButton.innerText = "×";
-      closeButton.addEventListener("click", () => {
-        answerBox.remove();
-      });
-      answerBox.appendChild(closeButton);
-
-      document.body.appendChild(answerBox);
-    }
-
-    // Trigger for fetching answer on text selection
-    document.addEventListener("mouseup", () => {
-      const selectedText = window.getSelection().toString().trim();
-      if (selectedText) {
-        fetchAnswer(selectedText);
-      }
-    });
-  </script>
+    <!-- Popup container with iframe for second page -->
+    <div id="popup-container">
+        <iframe src="https://chat.openai.com"></iframe>
+    </div>
 </body>
 </html>
